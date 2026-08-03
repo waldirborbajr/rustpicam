@@ -1,0 +1,22 @@
+services:
+  phone-cam:
+    image: ghcr.io/waldirborbajr/phonecam:latest
+    container_name: phonecam
+    restart: "no"   # PoC: roda sob demanda, não fica em loop
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    # Celular precisa estar acessível via ADB no host.
+    # Opções comuns:
+    #   1) USB: passe o bus USB (privileged + devices)
+    #   2) ADB over TCP: use network_mode host e adb connect IP:5555 antes
+    network_mode: host
+    privileged: true
+    volumes:
+      # Compartilha o socket/estado do adb do host (se já tiver devices conectados)
+      - /dev/bus/usb:/dev/bus/usb
+      # Opcional: persistir adb keys
+      - ${HOME}/.android:/home/appuser/.android
+    # Exemplo de execução sob demanda:
+    #   docker compose run --rm phone-cam --facing back --caption "teste"
+    command: ["--facing", "back"]

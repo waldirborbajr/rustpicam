@@ -1,0 +1,12 @@
+[package]
+name = "phone-cam-telegram"
+version = "0.1.0"
+edition = "2021"
+description = "PoC: captura câmera do celular via scrcpy e envia foto para o Telegram"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive", "env"] }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "multipart", "rustls-tls"] }
+tempfile = "3"
