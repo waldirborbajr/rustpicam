@@ -1,0 +1,56 @@
+{
+  "name": "Rust Environment",
+  "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb",
+        "serayuzgur.crates",
+        "fill-labs.dependi",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.cargo.features": "all",
+        "rust-analyzer.imports.granularity.group": "module",
+        "editor.formatOnSave": true,
+        "[rust]": {
+          "editor.defaultFormatter": "rust-lang.rust-analyzer"
+        }
+      }
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": false
+    },
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "latest",
+      "profile": "default"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-cargo-cache,target=/usr/local/cargo/registry,type=volume",
+    "source=${localWorkspaceFolderBasename}-target-cache,target=${containerWorkspaceFolder}/target,type=volume"
+  ],
+
+  "containerEnv": {
+    "CARGO_INCREMENTAL": "1",
+    "CARGO_TERM_COLOR": "always"
+  },
+
+  "postCreateCommand": "cargo --version && rustc --version && rustup component add clippy rustfmt && cargo install cargo-watch cargo-edit cargo-audit cargo-outdated cargo-nextest sccache --locked",
+
+  "postAttachCommand": "echo 'export RUSTC_WRAPPER=sccache' >> ~/.bashrc"
+}
