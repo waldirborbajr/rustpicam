@@ -1,5 +1,5 @@
 {
-  "name": "Rust Environment",
+  "name": "Rust Power User",
   "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
 
   "customizations": {
@@ -8,18 +8,25 @@
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
         "vadimcn.vscode-lldb",
-        "serayuzgur.crates",
+        "skellock.just",
         "fill-labs.dependi",
+        "serayuzgur.crates",
         "usernamehw.errorlens",
         "eamodio.gitlens",
+        "ms-vscode.hexeditor",
         "streetsidesoftware.code-spell-checker",
         "ms-azuretools.vscode-docker"
       ],
       "settings": {
         "rust-analyzer.check.command": "clippy",
-        "rust-analyzer.cargo.features": "all",
+        "rust-analyzer.checkOnSave": true,
+        "rust-analyzer.cargo.allFeatures": true,
         "rust-analyzer.imports.granularity.group": "module",
+        "rust-analyzer.procMacro.enable": true,
         "editor.formatOnSave": true,
+        "editor.inlayHints.enabled": "on",
+        "files.insertFinalNewline": true,
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "[rust]": {
           "editor.defaultFormatter": "rust-lang.rust-analyzer"
         }
@@ -29,8 +36,8 @@
 
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
-      "configureZshAsDefaultShell": false,
-      "installOhMyZsh": false
+      "installOhMyZsh": true,
+      "configureZshAsDefaultShell": true
     },
     "ghcr.io/devcontainers/features/rust:1": {
       "version": "latest",
@@ -47,10 +54,14 @@
 
   "containerEnv": {
     "CARGO_INCREMENTAL": "1",
+    "RUST_BACKTRACE": "1",
+    "RUSTFLAGS": "-D warnings",
     "CARGO_TERM_COLOR": "always"
   },
 
-  "postCreateCommand": "cargo --version && rustc --version && rustup component add clippy rustfmt && cargo install cargo-watch cargo-edit cargo-audit cargo-outdated cargo-nextest sccache --locked",
+  "remoteUser": "vscode",
 
-  "postAttachCommand": "echo 'export RUSTC_WRAPPER=sccache' >> ~/.bashrc"
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ripgrep fd-find bat git-delta hyperfine valgrind lldb && rustup component add rustfmt clippy rust-src && cargo install --locked cargo-binstall && cargo binstall -y --locked cargo-nextest cargo-edit cargo-watch cargo-expand cargo-outdated cargo-audit cargo-udeps cargo-semver-checks cargo-flamegraph cargo-llvm-lines cargo-tarpaulin sccache && echo 'export RUSTC_WRAPPER=sccache' >> ~/.zshrc && echo '🚀 Rust Power User Environment loaded successfully!'",
+
+  "postStartCommand": "rustc --version && cargo --version && cargo nextest --version"
 }
