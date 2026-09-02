@@ -1,6 +1,9 @@
 {
   "name": "Rust Power User",
-  "image": "mcr.microsoft.com/devcontainers/rust:1-bookworm",
+
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
 
   "customizations": {
     "vscode": {
@@ -39,29 +42,21 @@
       "installOhMyZsh": true,
       "configureZshAsDefaultShell": true
     },
-    "ghcr.io/devcontainers/features/rust:1": {
-      "version": "latest",
-      "profile": "default"
-    },
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
   "mounts": [
-    "source=${localWorkspaceFolderBasename}-cargo-cache,target=/usr/local/cargo/registry,type=volume",
-    "source=${localWorkspaceFolderBasename}-target-cache,target=${containerWorkspaceFolder}/target,type=volume"
+    "source=${localWorkspaceFolderBasename}-cargo-cache,target=/usr/local/cargo/registry,type=volume"
+    // Remove the target cache mount - it causes permission issues
   ],
-
-  "containerEnv": {
-    "CARGO_INCREMENTAL": "1",
-    "RUST_BACKTRACE": "1",
-    "RUSTFLAGS": "-D warnings",
-    "CARGO_TERM_COLOR": "always"
-  },
 
   "remoteUser": "vscode",
 
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ripgrep fd-find bat git-delta hyperfine valgrind lldb && rustup component add rustfmt clippy rust-src && cargo install --locked cargo-binstall && cargo binstall -y --locked cargo-nextest cargo-edit cargo-watch cargo-expand cargo-outdated cargo-audit cargo-udeps cargo-semver-checks cargo-flamegraph cargo-llvm-lines cargo-tarpaulin sccache && echo 'export RUSTC_WRAPPER=sccache' >> ~/.zshrc && echo '🚀 Rust Power User Environment loaded successfully!'",
+  "postStartCommand": "echo '✅ Rust DevContainer ready!' && rustc --version",
 
-  "postStartCommand": "rustc --version && cargo --version && cargo nextest --version"
+  "containerEnv": {
+    "SCCACHE_DIR": "/usr/local/cargo/sccache",
+    "SCCACHE_CACHE_SIZE": "50G"
+  }
 }
