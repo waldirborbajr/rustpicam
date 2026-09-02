@@ -12,6 +12,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         hyperfine \
         valgrind \
         lldb \
+        git-lfs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     # Create convenient symlinks for fd and bat (Debian names them differently)
@@ -43,8 +44,8 @@ RUN cargo binstall -y --locked \
         cargo-tarpaulin \
         sccache \
         git-delta \
-        just \
-        git-lfs
+        just 
+        
 
 # ==========================================
 # 3. Set global environment variables
