@@ -1,0 +1,62 @@
+{
+  "name": "Rust Power User",
+
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb",
+        "skellock.just",
+        "fill-labs.dependi",
+        "serayuzgur.crates",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "ms-vscode.hexeditor",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.checkOnSave": true,
+        "rust-analyzer.cargo.allFeatures": true,
+        "rust-analyzer.imports.granularity.group": "module",
+        "rust-analyzer.procMacro.enable": true,
+        "editor.formatOnSave": true,
+        "editor.inlayHints.enabled": "on",
+        "files.insertFinalNewline": true,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "[rust]": {
+          "editor.defaultFormatter": "rust-lang.rust-analyzer"
+        }
+      }
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installOhMyZsh": true,
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-cargo-cache,target=/usr/local/cargo/registry,type=volume"
+    // Remove the target cache mount - it causes permission issues
+  ],
+
+  "remoteUser": "vscode",
+
+  "postStartCommand": "echo '✅ Rust DevContainer ready!' && rustc --version",
+
+  "containerEnv": {
+    "SCCACHE_DIR": "/usr/local/cargo/sccache",
+    "SCCACHE_CACHE_SIZE": "50G"
+  }
+}
