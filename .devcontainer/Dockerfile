@@ -43,7 +43,8 @@ RUN cargo binstall -y --locked \
         cargo-tarpaulin \
         sccache \
         git-delta \
-        just
+        just \
+        git-lfs
 
 # ==========================================
 # 3. Set global environment variables
